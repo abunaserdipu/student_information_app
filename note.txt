@@ -1,0 +1,21 @@
+$students = Student::select('id', 'name', 'email', 'age', 'address')->get();
+        return view('admin.index', compact('students'));
+
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'age' => ['required', 'string', 'max:2'],
+            'address' => ['required', 'string', 'max:50'],
+        ]);
+
+        Student::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'age' => $request->age,
+            'address' => $request->address,
+        ]);
+
+        return redirect()->route('student.index')->with('success', 'Student created successfully');
